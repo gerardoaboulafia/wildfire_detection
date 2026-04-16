@@ -1,0 +1,56 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+.venv/
+venv/
+env/
+
+# Data (large, gitignored)
+data/
+
+# Model artifacts
+models/
+
+# MLflow
+mlruns/
+
+# Outputs & cache
+outputs/
+cache/
+
+# Environment
+.env
+.env.local
+*.env
+
+# Node / Next.js
+node_modules/
+.next/
+dashboard/.next/
+dashboard/node_modules/
+dashboard/.vercel/
+dashboard/*.tsbuildinfo
+dashboard/next-env.d.ts
+dashboard/.env*.local
+
+# macOS
+.DS_Store
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# GEE service account
+*service_account*.json
+*credentials*.json
+
+# CDS API key
+.cdsapirc
