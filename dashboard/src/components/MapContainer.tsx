@@ -7,17 +7,18 @@ import { INITIAL_VIEW_STATE, MAPBOX_STYLES } from '@/lib/constants';
 
 interface Props {
   layers: (Layer | null)[];
+  enableTerrain?: boolean;
 }
 
-export default function MapContainer({ layers }: Props) {
+export default function MapContainer({ layers, enableTerrain = false }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<unknown>(null);
   const overlayRef = useRef<unknown>(null);
   const layersRef = useRef(layers);
   const basemap = useStore((s) => s.basemap);
   const basemapRef = useRef(basemap);
+  const enableTerrainRef = useRef(enableTerrain);
 
-  // Always keep layersRef in sync so the map 'load' callback reads the latest
   useEffect(() => {
     layersRef.current = layers;
   });
@@ -46,32 +47,32 @@ export default function MapContainer({ layers }: Props) {
       (map as mapboxgl.Map).on('load', () => {
         const m = map as mapboxgl.Map;
 
-        m.addSource('mapbox-dem', {
-          type: 'raster-dem',
-          url: 'mapbox://mapbox.mapbox-terrain-dem-v1',
-          tileSize: 512,
-          maxzoom: 14,
-        });
-        m.setTerrain({ source: 'mapbox-dem', exaggeration: 2.0 });
+        if (enableTerrainRef.current) {
+          m.addSource('mapbox-dem', {
+            type: 'raster-dem',
+            url: 'mapbox://mapbox.mapbox-terrain-dem-v1',
+            tileSize: 512,
+            maxzoom: 14,
+          });
+          m.setTerrain({ source: 'mapbox-dem', exaggeration: 2.0 });
 
-        m.addLayer({
-          id: 'sky',
-          type: 'sky',
-          paint: {
-            'sky-type': 'atmosphere',
-            'sky-atmosphere-sun': [0.0, 90.0],
-            'sky-atmosphere-sun-intensity': 15,
-          },
-        });
+          m.addLayer({
+            id: 'sky',
+            type: 'sky',
+            paint: {
+              'sky-type': 'atmosphere',
+              'sky-atmosphere-sun': [0.0, 90.0],
+              'sky-atmosphere-sun-intensity': 15,
+            },
+          });
+        }
 
-        // Use layersRef.current to get the latest layers, not the stale closure value
         overlay = new MapboxOverlay({
           layers: layersRef.current.filter(Boolean) as Layer[],
         });
         (map as mapboxgl.Map).addControl(overlay as mapboxgl.IControl);
         overlayRef.current = overlay;
 
-        // Listen for flyover events from FlyoverView
         function handleFlyover(e: Event) {
           const waypoints = (e as CustomEvent).detail as {
             center: [number, number]; zoom: number; pitch: number; bearing: number; duration: number;
@@ -110,14 +111,12 @@ export default function MapContainer({ layers }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Update layers without recreating the map
   useEffect(() => {
     if (!overlayRef.current) return;
     const validLayers = layers.filter(Boolean) as Layer[];
     (overlayRef.current as { setProps: (p: object) => void }).setProps({ layers: validLayers });
   }, [layers]);
 
-  // Basemap switch — preserve terrain after style reload
   useEffect(() => {
     const map = mapRef.current as mapboxgl.Map | null;
     if (!map) return;
@@ -126,15 +125,17 @@ export default function MapContainer({ layers }: Props) {
     async function switchStyle() {
       map!.setStyle(MAPBOX_STYLES[basemap]);
       map!.once('styledata', () => {
-        if (!map!.getSource('mapbox-dem')) {
-          map!.addSource('mapbox-dem', {
-            type: 'raster-dem',
-            url: 'mapbox://mapbox.mapbox-terrain-dem-v1',
-            tileSize: 512,
-            maxzoom: 14,
-          });
+        if (enableTerrainRef.current) {
+          if (!map!.getSource('mapbox-dem')) {
+            map!.addSource('mapbox-dem', {
+              type: 'raster-dem',
+              url: 'mapbox://mapbox.mapbox-terrain-dem-v1',
+              tileSize: 512,
+              maxzoom: 14,
+            });
+          }
+          map!.setTerrain({ source: 'mapbox-dem', exaggeration: 2.0 });
         }
-        map!.setTerrain({ source: 'mapbox-dem', exaggeration: 2.0 });
       });
     }
 

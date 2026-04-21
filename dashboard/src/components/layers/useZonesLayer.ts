@@ -23,14 +23,11 @@ export function useZonesLayer(enabled: boolean) {
       id: 'risk-zones',
       data: geojson,
       filled: true,
-      stroked: true,
+      stroked: false,
       getFillColor: (f) => {
         const label = f.properties?.label ?? f.properties?.risk_label ?? '';
-        return ZONE_FILL_COLORS[label] ?? [128, 128, 128, 60];
+        return ZONE_FILL_COLORS[label] ?? [128, 128, 128, 100];
       },
-      getLineColor: [255, 255, 255, 40],
-      getLineWidth: 1,
-      lineWidthUnits: 'pixels',
       pickable: false,
     });
   }, [enabled, geojson]);

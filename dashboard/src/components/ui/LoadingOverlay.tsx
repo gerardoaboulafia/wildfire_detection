@@ -13,8 +13,8 @@ export default function LoadingOverlay() {
       <div className="mb-4 h-10 w-10 animate-spin rounded-full border-4 border-orange-500 border-t-transparent" />
       <p className="text-lg font-semibold">Loading susceptibility data…</p>
       <p className="mt-1 text-sm text-gray-400">
-        {!gridLoaded && 'Grid (4.4 MB) '}
-        {!firesLoaded && 'Fire detections (631 KB) '}
+        {!gridLoaded && 'Grid (4.2 MB) '}
+        {!firesLoaded && 'Fire detections (631 KB)'}
       </p>
     </div>
   );

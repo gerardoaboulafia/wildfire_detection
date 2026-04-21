@@ -20,27 +20,21 @@ export interface LayerToggles {
 }
 
 interface AppState {
-  // View routing
   activeView: ViewId;
   setActiveView: (v: ViewId) => void;
 
-  // Basemap
   basemap: BasemapStyle;
   setBasemap: (b: BasemapStyle) => void;
 
-  // Layer toggles
   layers: LayerToggles;
   toggleLayer: (key: keyof LayerToggles) => void;
 
-  // Hexbin radius (meters)
   hexRadius: number;
   setHexRadius: (r: number) => void;
 
-  // Time filter (fire year range)
   yearRange: [number, number];
   setYearRange: (r: [number, number]) => void;
 
-  // Map popup
   popup: PopupData | null;
   setPopup: (p: PopupData | null) => void;
 
@@ -72,7 +66,7 @@ interface AppState {
     nModis: number,
   ) => void;
 
-  // SHAP samples (for popup local explanations)
+  // SHAP samples
   shapSamples: Record<string, number>[] | null;
   setShapSamples: (s: Record<string, number>[]) => void;
 }
@@ -85,7 +79,7 @@ export const useStore = create<AppState>((set) => ({
   setBasemap: (basemap) => set({ basemap }),
 
   layers: {
-    showFires: true,
+    showFires: false,
     showZones: false,
     showHeatmap: true,
   },
@@ -101,7 +95,6 @@ export const useStore = create<AppState>((set) => ({
   popup: null,
   setPopup: (popup) => set({ popup }),
 
-  // Grid data
   gridLoaded: false,
   gridLons: null,
   gridLats: null,
@@ -110,7 +103,6 @@ export const useStore = create<AppState>((set) => ({
   setGridData: (lons, lats, probs, classes) =>
     set({ gridLons: lons, gridLats: lats, gridProbs: probs, gridClasses: classes, gridLoaded: true }),
 
-  // Fire data
   firesLoaded: false,
   fireLons: null,
   fireLats: null,

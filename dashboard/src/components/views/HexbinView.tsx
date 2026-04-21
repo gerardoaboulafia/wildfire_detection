@@ -13,7 +13,7 @@ export default function HexbinView() {
     <div className="relative flex h-full w-full">
       <div className="relative flex-1">
         <LoadingOverlay />
-        <MapContainer layers={[fireDensityLayer]} />
+        <MapContainer layers={[fireDensityLayer]} enableTerrain={false} />
       </div>
 
       <div className="flex w-52 flex-col gap-4 bg-gray-900 p-4">

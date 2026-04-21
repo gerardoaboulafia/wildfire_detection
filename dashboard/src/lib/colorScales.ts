@@ -7,12 +7,12 @@ export const RISK_COLORS: Record<number, [number, number, number, number]> = {
   4: [220, 38, 38, 220],   // red-600
 };
 
-// Fill colors for GeoJSON zone layer (slightly transparent)
+// Fill colors for GeoJSON zone layer — semi-transparent so basemap roads/labels show through
 export const ZONE_FILL_COLORS: Record<string, [number, number, number, number]> = {
-  Low: [34, 197, 94, 80],
-  Moderate: [234, 179, 8, 80],
-  High: [249, 115, 22, 80],
-  'Very High': [220, 38, 38, 100],
+  Low: [34, 197, 94, 140],
+  Moderate: [234, 179, 8, 140],
+  High: [249, 115, 22, 160],
+  'Very High': [220, 38, 38, 180],
 };
 
 // Hex aggregation color range (sequential: light yellow → dark red)

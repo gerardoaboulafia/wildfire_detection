@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Diccionario de Datos — Wildfire Córdoba</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+
+
+
+  :root {
+
+    --bg: #050505;
+
+    --surface: #141414;
+
+    --surface2: #1f1f1f;
+
+    --border: rgba(255, 140, 0, 0.15);
+
+    --fire1: #ff8c00;
+
+    --fire2: #ffb347;
+
+    --fire3: #f5c542;
+
+    --text: #f5f5f5;
+
+    --muted: #a3a3a3;
+
+    --tag-bg: #1f1f1f;
+
+    --tag-border: rgba(255, 140, 0, 0.15);
+
+    --accent: #ff8c00;
+
+  }
+
+
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+
+
+  body {
+
+    background: var(--bg);
+
+    color: var(--text);
+
+    font-family: 'Space Grotesk', sans-serif;
+
+    font-size: 14px;
+
+    line-height: 1.6;
+
+    min-height: 100vh;
+
+  }
+
+
+
+  .header {
+
+    padding: 48px 40px 32px;
+
+    border-bottom: 1px solid var(--border);
+
+    position: relative;
+
+    overflow: hidden;
+
+  }
+
+  .header::before {
+
+    content: '';
+
+    position: absolute;
+
+    top: -60px; right: -60px;
+
+    width: 300px; height: 300px;
+
+    background: radial-gradient(circle, rgba(255,69,0,0.12) 0%, transparent 70%);
+
+    pointer-events: none;
+
+  }
+
+  .header-top { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 8px; }
+
+  .fire-icon { font-size: 32px; line-height: 1; margin-top: 4px; }
+
+  .title {
+
+    font-family: 'JetBrains Mono', monospace;
+
+    font-size: 22px; font-weight: 700;
+
+    color: #fff; letter-spacing: -0.5px; line-height: 1.2;
+
+  }
+
+  .subtitle { font-size: 13px; color: var(--muted); margin-top: 6px; font-weight: 300; letter-spacing: 0.3px; }
+
+  .badge-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+
+  .badge {
+
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+
+    padding: 3px 10px; border-radius: 2px;
+
+    border: 1px solid var(--tag-border); background: var(--tag-bg);
+
+    color: var(--fire2); letter-spacing: 0.5px; text-transform: uppercase;
+
+  }
+
+
+
+  .controls {
+
+    padding: 20px 40px; border-bottom: 1px solid var(--border);
+
+    display: flex; gap: 12px; flex-wrap: wrap; align-items: center;
+
+    background: var(--surface); position: sticky; top: 0; z-index: 10;
+
+  }
+
+  .search-wrap { position: relative; flex: 1; min-width: 200px; }
+
+  .search-wrap svg {
+
+    position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+
+    color: var(--muted); width: 14px; height: 14px;
+
+  }
+
+  .search {
+
+    width: 100%; background: var(--surface2);
+
+    border: 1px solid var(--border); border-radius: 4px;
+
+    color: var(--text); font-family: 'JetBrains Mono', monospace;
+
+    font-size: 12px; padding: 9px 12px 9px 36px; outline: none; transition: border-color 0.2s;
+
+  }
+
+  .search::placeholder { color: var(--muted); }
+
+  .search:focus { border-color: var(--fire1); }
+
+
+
+  .filter-btn {
+
+    background: var(--surface2); border: 1px solid var(--border); border-radius: 4px;
+
+    color: var(--muted); font-family: 'JetBrains Mono', monospace; font-size: 11px;
+
+    padding: 8px 14px; cursor: pointer; transition: all 0.15s;
+
+    white-space: nowrap; text-transform: uppercase; letter-spacing: 0.4px;
+
+  }
+
+  .filter-btn:hover { border-color: var(--fire2); color: var(--fire2); }
+
+  .filter-btn.active { background: var(--fire1); border-color: var(--fire1); color: #fff; }
+
+  .count-badge { margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); white-space: nowrap; }
+
+  .count-badge span { color: var(--fire2); }
+
+
+
+  .main { padding: 0 40px 60px; }
+
+
+
+  .section { margin-top: 40px; }
+
+  .section-header {
+
+    display: flex; align-items: center; gap: 12px;
+
+    margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--border);
+
+  }
+
+  .section-number {
+
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--fire1);
+
+    background: var(--tag-bg); border: 1px solid var(--tag-border);
+
+    border-radius: 2px; padding: 2px 7px; letter-spacing: 0.5px;
+
+  }
+
+  .section-title {
+
+    font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 700;
+
+    color: #fff; letter-spacing: -0.2px; text-transform: uppercase;
+
+  }
+
+  .section-count { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); margin-left: auto; }
+
+
+
+  .subsection-title {
+
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--fire2);
+
+    text-transform: uppercase; letter-spacing: 1px;
+
+    margin: 20px 0 10px; padding-left: 2px; opacity: 0.8;
+
+  }
+
+
+
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 12px; }
+
+
+
+  .var-card {
+
+    background: var(--surface); border: 1px solid var(--border);
+
+    border-radius: 6px; padding: 16px 18px;
+
+    transition: border-color 0.2s, transform 0.15s;
+
+    position: relative; overflow: hidden;
+
+  }
+
+  .var-card::after {
+
+    content: ''; position: absolute; top: 0; left: 0;
+
+    width: 3px; height: 100%; background: var(--accent); opacity: 0; transition: opacity 0.2s;
+
+  }
+
+  .var-card:hover { border-color: #3d3030; transform: translateY(-1px); }
+
+  .var-card:hover::after { opacity: 1; }
+
+  .var-card.hidden { display: none; }
+
+
+
+  .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
+
+  .var-name { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 700; color: var(--fire2); letter-spacing: -0.3px; }
+
+
+
+  .type-pill {
+
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+
+    padding: 2px 8px; border-radius: 20px; border: 1px solid;
+
+    white-space: nowrap; flex-shrink: 0; text-transform: uppercase; letter-spacing: 0.5px;
+
+  }
+
+  .type-continua   { color: #5bc8af; border-color: #1a3d35; background: #0d2420; }
+
+  .type-binaria    { color: #e07b54; border-color: #3d2010; background: #1e0e05; }
+
+  .type-categorica { color: #8b7dd8; border-color: #2a2040; background: #12101e; }
+
+  .type-ordinal    { color: #d4c97a; border-color: #3d3510; background: #1e1a05; }
+
+  .type-fecha      { color: #7ab8d4; border-color: #102030; background: #051015; }
+
+  .type-discreta   { color: #a8d47a; border-color: #253010; background: #121805; }
+
+  .type-default    { color: var(--muted); border-color: var(--border); background: transparent; }
+
+
+
+  .var-desc { font-size: 13px; color: #d1d1d1; line-height: 1.55; margin-bottom: 12px; }
+
+
+
+  .meta-row { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  .meta-chip {
+
+    display: flex; align-items: center; gap: 5px; font-size: 11px;
+
+    color: var(--muted); background: var(--surface2);
+
+    border: 1px solid var(--border); border-radius: 3px; padding: 3px 8px;
+
+  }
+
+  .meta-chip .label { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.4px; }
+
+  .meta-chip .value { color: var(--text); font-size: 11px; }
+
+
+
+  .notes-box {
+
+    background: var(--surface); border: 1px solid var(--border);
+
+    border-left: 3px solid var(--fire1); border-radius: 4px;
+
+    padding: 20px 24px; margin-top: 40px;
+
+  }
+
+  .notes-title { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--fire1); margin-bottom: 14px; }
+
+  .notes-list { list-style: none; }
+
+  .notes-list li {
+
+    font-size: 13px; color: #d1d1d1; padding: 7px 0;
+
+    border-bottom: 1px solid var(--border);
+
+    display: flex; gap: 10px; align-items: flex-start; line-height: 1.5;
+
+  }
+
+  .notes-list li:last-child { border-bottom: none; }
+
+  .notes-list li::before { content: '→'; color: var(--fire2); flex-shrink: 0; margin-top: 1px; }
+
+  .notes-list code {
+
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+
+    background: var(--tag-bg); border: 1px solid var(--tag-border);
+
+    border-radius: 2px; padding: 1px 5px; color: var(--fire2);
+
+  }
+
+
+
+  .no-results { text-align: center; padding: 60px 0; color: var(--muted); font-family: 'JetBrains Mono', monospace; font-size: 13px; display: none; }
+
+  .no-results.visible { display: block; }
+
+
+
+  ::-webkit-scrollbar { width: 6px; }
+
+  ::-webkit-scrollbar-track { background: var(--bg); }
+
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+
+
+</style>
+
+</head>
+
+<body>
+
+
+
+<div class="header">
+
+  <div class="header-top">
+
+    <div class="fire-icon">🔥</div>
+
+    <div>
+
+      <div class="title">Diccionario de Datos</div>
+
+      <div class="subtitle">Wildfire Susceptibility Mapping — Córdoba, Argentina &nbsp;·&nbsp; Clasificación binaria ML</div>
+
+    </div>
+
+  </div>
+
+  <div class="badge-row">
+
+    <span class="badge">NASA FIRMS</span>
+    <span class="badge">ERA5-Land</span>
+    <span class="badge">SRTM DEM</span>
+    <span class="badge">SoilGrids</span>
+    <span class="badge">MODIS / VIIRS</span>
+    <span class="badge">OpenStreetMap</span>
+    <span class="badge">WorldPop</span>
+    <span class="badge">Copernicus</span>
+
+  </div>
+
+</div>
+
+
+
+<div class="controls">
+
+  <div class="search-wrap">
+
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+
+      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+
+    </svg>
+
+    <input class="search" id="searchInput" type="text" placeholder="Buscar variable, fuente o descripción...">
+
+  </div>
+
+  <button class="filter-btn active" data-filter="all">Todas</button>
+
+  <button class="filter-btn" data-filter="Continua">Continua</button>
+
+  <button class="filter-btn" data-filter="Binaria">Binaria</button>
+
+  <button class="filter-btn" data-filter="Categorica">Categórica</button>
+
+  <button class="filter-btn" data-filter="Discreta">Discreta</button>
+
+  <div class="count-badge" id="countBadge">Mostrando <span id="visibleCount">35</span> de 35 variables</div>
+
+</div>
+
+
+
+<div class="main">
+
+
+
+  <div class="section" data-section="01">
+
+    <div class="section-header">
+
+      <span class="section-number">01</span>
+
+      <span class="section-title">Variable Objetivo</span>
+
+      <span class="section-count">1 variable</span>
+
+    </div>
+
+    
+
+    
+
+    <div class="cards-grid">
+
+
+
+      <div class="var-card" data-tipo="binaria" data-text="fire_occurrence binaria incendio detección satelital modis firms gwis">
+
+        <div class="card-top">
+
+          <div class="var-name">fire_occurrence</div>
+
+          <span class="type-pill type-binaria">Binaria</span>
+
+        </div>
+
+        <div class="var-desc">Variable objetivo del modelo de clasificación. Se construye a partir de detecciones satelitales de fuego activo sin discretización manual. Puntos positivos: MODIS FIRMS (2001–2022). Puntos negativos: generados aleatoriamente a &gt;5 km de cualquier detección, estratificados por cobertura del suelo.</div>
+
+        <div class="meta-row"><div class="meta-chip"><span class="label">Valores</span><span class="value">1 = fuego · 0 = no fuego</span></div><div class="meta-chip"><span class="label">Fuente</span><span class="value">NASA FIRMS, GWIS, datos.gob.ar</span></div></div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="section" data-section="02">
+
+    <div class="section-header">
+
+      <span class="section-number">02</span>
+
+      <span class="section-title">Variables de Detección de Fuego</span>
+
+      <span class="section-count">5 variables</span>
+
+    </div>
+
+    
+
+    
+
+    <div class="cards-grid">
+
+
+
+      <div class="var-card" data-tipo="continua" data-text="latitude continua grados decimales latitud punto detección nasa firms modis viirs">
+
+        <div class="card-top">
+
+          <div class="var-name">latitude</div>
+
+          <span class="type-pill type-continua">Continua</span>
+
+        </div>
+
+        <div class="var-desc">Latitud geográfica del punto de detección de fuego activo.</div>
+
+        <div class="meta-row"><div class="meta-chip"><span class="label">Unidad</span><span class="value">Grados decimales</span></div><div class="meta-chip"><span class="label">Fuente</span><span class="value">NASA FIRMS</span></div><div class="meta-chip"><span class="label">Res.</span><span class="value">1 km (MODIS) / 375 m (VIIRS)</span></div></div>
+
+      </div>
+
+
+      <div class="var-card" data-tipo="continua" data-text="longitude continua grados decimales longitud punto detección nasa firms modis viirs">
+
+        <div class="card-top">
+
+          <div class="var-name">longitude</div>
+
+          <span class="type-pill type-continua">Continua</span>
+
+        </div>
+
+        <div class="var-desc">Longitud geográfica del punto de detección de fuego activo.</div>
+
+        <div class="meta-row"><div class="meta-chip"><span class="label">Unidad</span><span class="value">Grados decimales</span></div><div class="meta-chip"><span class="label">Fuente</span><span class="value">NASA FIRMS</span></div><div class="meta-chip"><span class="label">Res.</span><span class="value">1 km (MODIS) / 375 m (VIIRS)</span></div></div>
+
+      </div>
+
+
+      <div class="var-card" data-tipo="fecha" data-text="detection_date fecha yyyy-mm-dd detección fuego nasa firms">
+
+        <div class="card-top">
+
+          <div class="var-name">detection_date</div>
+
+          <span class="type-pill type-fecha">Fecha</span>
+
+        </div>
+
+        <div class="var-desc">Fecha de detección del fuego activo por el satélite.</div>
+
+        <div class="meta-row"><div class="meta-chip"><span class="label">Formato</span><span class="value">YYYY-MM-DD</span></div><div class="meta-chip"><span class="label">Fuente</span><span class="value">NASA FIRMS</span></div></div>
+
+      </div>
+
+
+      <div class="var-card" data-tipo="ordinal" data-text="confidence confianza detección modis viirs low nominal high ordinal">
+
+        <div class="card-top">
+
+          <div class="var-name">confidence</div>
+
+          <span class="type-pill type-ordinal">Ordinal</span>
+
+        </div>
+
+        <div class="var-desc">Nivel de confianza de la detección de fuego activo reportado por el sensor MODIS o VIIRS.</div>
+
+        <div class="meta-row"><div class="meta-chip"><span class="label">Valores</span><span class="value">% o low / nominal / high</span></div><div class="meta-chip"><span class="label">Fuente</span><span class="value">NASA FIRMS</span></div></div>
+
+      </div>
+
+
+      <div class="var-card" data-tipo="continua" data-text="frp fire radiative power potencia radiativa megavatios intensidad incendio nasa firms">
+
+        <div class="card-top">
+
+          <div class="var-name">frp</div>
+
+          <span class="type-pill type-continua">Continua</span>
+
+        </div>
+
+        <div class="var-desc">Fire Radiative Power. Potencia radiativa del fuego; indica la intensidad energética del incendio al momento de la detección.</div>
+
+        <div class="meta-row"><div class="meta-chip"><span class="label">Unidad</span><span class="value">MW (megavatios)</span></div><div class="meta-chip"><span class="label">Fuente</span><span class="value">NASA FIRMS</span></div></div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="section" data-section="03">
+
+    <div class="section-header">
+
+      <span class="section-number">03</span>
+
+      <span class="section-title">Variables Predictoras (Features)</span>
+
+      <span class="section-count">20 variables</span>
+
+    </div>
+
+    
+
+    <div class="subsection-title">3.1 — Topografía</div>
+
+    <div class="cards-grid">
+
+
+
+      <div class="var-card" data-tipo="continua" data-text="elevation elevación metros altitud srtm dem google earth engine topografía">
+
+        <div class="card-top">
+
+          <div class="var-name">elevation</div>
+
+          <span class="type-pill type-continua">Continua</span>
+
+        </div>
+
+        <div class="var-desc">Altura sobre el nivel del mar en el punto de muestra. Derivada del Modelo Digital de Elevación SRTM.</div>
+
+        <div class="meta-row"><div class="meta-chip"><span class="label">Unidad</span><span class="value">Metros (msnm)</span></div><div class="meta-chip"><span class="label">Fuente</span><span class="value">SRTM DEM (GEE)</span></div><div class="meta-chip"><span class="label">Res.</span><span class="value">30 m</span></div></div>
+
+      </div>
+
+
+      <div class="var-card" data-tipo="continua" data-text="slope pendiente inclinación grados terreno propagación fuego srtm dem">
+
+        <div class="card-top">
+
+          <div class="var-name">slope</div>
+
+          <span class="type-pill type-continua">Continua</span>
+
+        </div>
+
+        <div class="var-desc">Inclinación del terreno respecto a la horizontal. Influye en la velocidad de propagación del fuego. Derivada del DEM.</div>
+
+        <div class="meta-row"><div class="meta-chip"><span class="label">Unidad</span><span class="value">Grados (°)</span></div><div class="meta-chip"><span class="label">Fuente</span><span class="value">SRTM DEM (GEE)</span></div><div class="meta-chip"><span class="label">Res.</span><span class="value">30 m</span></div></div>
+
+      </div>
+
+
+      <div class="var-card" data-tipo="continua" data-text="aspect orientación cara terreno norte exposición solar coseno srtm dem">
+
+        <div class="card-top">
+
+          <div class="var-name">aspect</div>
+
+          <span class="type-pill type-continua">Continua</span>
+
+        </div>
+
+        <div class="var-desc">Orientación de la cara del terreno respecto al norte. Se aplica transformación coseno para capturar exposición solar de forma continua y evitar discontinuidad en los 360°.</div>
+
+        <div class="meta-row"><div class="meta-chip"><span class="label">Unidad</span><span class="value">Adimensional (cos)</span></div><div class="meta-chip"><span class="label">Fuente</span><span class="value">SRTM DEM (GEE)</span></div><div class="meta-chip"><span class="label">Res.</span><span class="value">30 m</span></div></div>
+
+      </div>
+
+
+      <div class="var-card" data-tipo="continua" data-text="twi topographic wetness index humedad suelo proxy acumulación srtm dem">
+
+        <div class="card-top">
+
+          <div class="var-name">twi</div>
+
+          <span class="type-pill type-continua">Continua</span>
+
+        </div>
+
+        <div class="var-desc">Topographic Wetness Index. Índice que estima la tendencia de acumulación de humedad en el suelo según la topografía local. Actúa como proxy de humedad del suelo.</div>
+
+        <div class="meta-row"><div class="meta-chip"><span class="label">Unidad</span><span class="value">Adimensional</span></div><div class="meta-chip"><span class="label">Fuente</span><span class="value">SRTM DEM (GEE)</span></div><div class="meta-chip"><span class="label">Res.</span><span class="value">30 m</span></div></div>
+
+      </div>
+
+    </div>
+
+
+    <div class="subsection-title">3.2 — Vegetación</div>
+
+    <div class="cards-grid">
+
+
+
+      <div class="var-card" data-tipo="continua" data-text="ndvi normalized difference vegetation index vegetación verdor combustible modis gee">
+
+        <div class="card-top">
+
+          <div class="var-name">ndvi</div>
+
+          <span class="type-pill type-continua">Continua</span>
+
+        </div>
+
+        <div class="var-desc">Normalized Difference Vegetation Index. Índice de verdor y densidad de la cobertura vegetal. Composites estacionales promediados durante la temporada de incendios.</div>
+
+        <div class="meta-row"><div class="meta-chip"><span class="label">Rango</span><span class="value">[-1, 1]</span></div><div class="meta-chip"><span class="label">Fuente</span><span class="value">MODIS MOD13A1 (GEE)</span></div><div class="meta-chip"><span class="label">Res.</span><span class="value">500 m</span></div></div>
+
+      </div>
+
+
+      <div class="var-card" data-tipo="continua" data-text="lst land surface temperature temperatura superficial suelo estrés hídrico aridez modis gee">
+
+        <div class="card-top">
+
+          <div class="var-name">lst</div>
+
+          <span class="type-pill type-continua">Continua</span>
+
+        </div>
+
+        <div class="var-desc">Land Surface Temperature. Temperatura superficial del suelo captada por el satélite. Composite estacional promedio. Indica estrés hídrico y condiciones de aridez.</div>
+
+        <div class="meta-row"><div class="meta-chip"><span class="label">Unidad</span><span class="value">Kelvin / °C</span></div><div class="meta-chip"><span class="label">Fuente</span><span class="value">MODIS MOD11A2 (GEE)</span></div><div class="meta-chip"><span class="label">Res.</span><span class="value">1 km</span></div></div>
+
+      </div>
+
+
+      <div class="var-card" data-tipo="categorica" data-text="land_cover cobertura suelo uso bosque pastizal agrícola copernicus one-hot">
+
+        <div class="card-top">
+
+          <div class="var-name">land_cover</div>
+
+          <span class="type-pill type-categorica">Categórica</span>
+
+        </div>
+
+        <div class="var-desc">Tipo de cobertura y uso del suelo. Se codifica con one-hot encoding para el modelado. Determina el tipo y cantidad de combustible disponible.</div>
+
+        <div class="meta-row"><div class="meta-chip"><span class="label">Fuente</span><span class="value">Copernicus Global Land Cover</span></div><div class="meta-chip"><span class="label">Res.</span><span class="value">100 m</span></div></div>
+
+      </div>
+
+    </div>
+
+
+    <div class="subsection-title">3.3 — Clima (ERA5-Land)</div>
+
+    <div class="cards-grid">
+
+
+
+      <div class="var-card" data-tipo="continua" data-text="temperature_mean temperatura media anual estacional era5 land copernicus cds clima">
+
+        <div class="card-top">
+
+          <div class="var-name">temperature_mean</div>
+
+          <span class="type-pill type-continua">Continua</span>
+
+        </div>
+
+        <div class="var-desc">Temperatura media anual y/o estacional del aire. Fuente única y consistente que reemplaza el uso de múltiples APIs meteorológicas.</div>
+
+        <div class="meta-row"><div class="meta-chip"><span class="label">Unidad</span><span class="value">°C</span></div><div class="meta-chip"><span class="label">Fuente</span><span class="value">ERA5-Land (CDS)</span></div><div class="meta-chip"><span class="label">Res.</span><span class="value">~9 km</span></div></div>
+
+      </div>
+
+
+      <div class="var-card" data-tipo="continua" data-text="precipitation_sum precipitación acumulada lluvia sequía humedad era5 land copernicus">
+
+        <div class="card-top">
+
+          <div class="var-name">precipitation_sum</div>
+
+          <span class="type-pill type-continua">Continua</span>
+
+        </div>
+
+        <div class="var-desc">Precipitación acumulada anual y/o estacional. Indicador de sequía y disponibilidad de humedad en la vegetación.</div>
+
+        <div class="meta-row"><div class="meta-chip"><span class="label">Unidad</span><span class="value">mm</span></div><div class="meta-chip"><span class="label">Fuente</span><span class="value">ERA5-Land (CDS)</span></div><div class="meta-chip"><span class="label">Res.</span><span class="value">~9 km</span></div></div>
+
+      </div>
+
+
+      <div class="var-card" data-tipo="continua" data-text="wind_speed_mean viento velocidad media propagación fuego era5 land copernicus">
+
+        <div class="card-top">
+
+          <div class="var-name">wind_speed_mean</div>
+
+          <span class="type-pill type-continua">Continua</span>
+
+        </div>
+
+        <div class="var-desc">Velocidad media del viento durante la temporada de incendios. Controla la dirección y velocidad de propagación del fuego.</div>
+
+        <div class="meta-row"><div class="meta-chip"><span class="label">Unidad</span><span class="value">m/s</span></div><div class="meta-chip"><span class="label">Fuente</span><span class="value">ERA5-Land (CDS)</span></div><div class="meta-chip"><span class="label">Res.</span><span class="value">~9 km</span></div></div>
+
+      </div>
+
+
+      <div class="var-card" data-tipo="continua" data-text="vpd vapor pressure deficit déficit presión vapor aridez estrés hídrico era5 land">
+
+        <div class="card-top">
+
+          <div class="var-name">vpd</div>
+
+          <span class="type-pill type-continua">Continua</span>
+
+        </div>
+
+        <div class="var-desc">Vapor Pressure Deficit — déficit de presión de vapor. Indicador de aridez atmosférica: a mayor VPD, mayor estrés hídrico en la vegetación y mayor riesgo de ignición.</div>
+
+        <div class="meta-row"><div class="meta-chip"><span class="label">Unidad</span><span class="value">kPa</span></div><div class="meta-chip"><span class="label">Fuente</span><span class="value">ERA5-Land (CDS)</span></div><div class="meta-chip"><span class="label">Res.</span><span class="value">~9 km</span></div></div>
+
+      </div>
+
+    </div>
+
+
+    <div class="subsection-title">3.4 — Factores Antrópicos</div>
+
+    <div class="cards-grid">
+
+
+
+      <div class="var-card" data-tipo="continua" data-text="dist_roads distancia caminos ignición acceso humano openstreetmap osmnx vectorial">
+
+        <div class="card-top">
+
+          <div class="var-name">dist_roads</div>
+
+          <span class="type-pill type-continua">Continua</span>
+
+        </div>
+
+        <div class="var-desc">Distancia euclidiana o de red al camino más cercano. Proxy de accesibilidad humana y potencial fuente de ignición accidental.</div>
+
+        <div class="meta-row"><div class="meta-chip"><span class="label">Unidad</span><span class="value">Metros</span></div><div class="meta-chip"><span class="label">Fuente</span><span class="value">OpenStreetMap (OSMnx)</span></div><div class="meta-chip"><span class="label">Res.</span><span class="value">Vectorial</span></div></div>
+
+      </div>
+
+
+      <div class="var-card" data-tipo="continua" data-text="dist_rivers distancia ríos cursos agua barreras naturales hydroshed openstreetmap vectorial">
+
+        <div class="card-top">
+
+          <div class="var-name">dist_rivers</div>
+
+          <span class="type-pill type-continua">Continua</span>
+
+        </div>
+
+        <div class="var-desc">Distancia al curso de agua más cercano. Los ríos y arroyos actúan como barreras naturales a la propagación del fuego.</div>
+
+        <div class="meta-row"><div class="meta-chip"><span class="label">Unidad</span><span class="value">Metros</span></div><div class="meta-chip"><span class="label">Fuente</span><span class="value">OSM / HydroSHEDS</span></div><div class="meta-chip"><span class="label">Res.</span><span class="value">Vectorial</span></div></div>
+
+      </div>
+
+
+      <div class="var-card" data-tipo="continua" data-text="population_density densidad población hab km2 ignición presión antrópica worldpop">
+
+        <div class="card-top">
+
+          <div class="var-name">population_density</div>
+
+          <span class="type-pill type-continua">Continua</span>
+
+        </div>
+
+        <div class="var-desc">Densidad de población humana. Proxy de presión antrópica y probabilidad de ignición por actividad humana.</div>
+
+        <div class="meta-row"><div class="meta-chip"><span class="label">Unidad</span><span class="value">hab/km²</span></div><div class="meta-chip"><span class="label">Fuente</span><span class="value">WorldPop</span></div><div class="meta-chip"><span class="label">Res.</span><span class="value">100 m</span></div></div>
+
+      </div>
+
+    </div>
+
+
+    <div class="subsection-title">3.5 — Suelo (SoilGrids)</div>
+
+    <div class="cards-grid">
+
+
+
+      <div class="var-card" data-tipo="continua" data-text="soil_organic_carbon carbono orgánico suelo humedad retención hídrica combustible soilgrids">
+
+        <div class="card-top">
+
+          <div class="var-name">soil_organic_carbon</div>
+
+          <span class="type-pill type-continua">Continua</span>
+
+        </div>
+
+        <div class="var-desc">Carbono orgánico del suelo. Relacionado con la humedad, la retención hídrica y el potencial combustible del suelo.</div>
+
+        <div class="meta-row"><div class="meta-chip"><span class="label">Unidad</span><span class="value">g/kg</span></div><div class="meta-chip"><span class="label">Fuente</span><span class="value">SoilGrids</span></div><div class="meta-chip"><span class="label">Res.</span><span class="value">250 m</span></div></div>
+
+      </div>
+
+
+      <div class="var-card" data-tipo="continua" data-text="clay_content arcilla porcentaje suelo retención agua humedad soilgrids">
+
+        <div class="card-top">
+
+          <div class="var-name">clay_content</div>
+
+          <span class="type-pill type-continua">Continua</span>
+
+        </div>
+
+        <div class="var-desc">Porcentaje de arcilla en el suelo. Influye en la capacidad de retención de agua y, por ende, en la humedad del suelo.</div>
+
+        <div class="meta-row"><div class="meta-chip"><span class="label">Unidad</span><span class="value">% en peso</span></div><div class="meta-chip"><span class="label">Fuente</span><span class="value">SoilGrids</span></div><div class="meta-chip"><span class="label">Res.</span><span class="value">250 m</span></div></div>
+
+      </div>
+
+
+      <div class="var-card" data-tipo="continua" data-text="soil_ph ph suelo acidez alcalinidad vegetación humedad soilgrids">
+
+        <div class="card-top">
+
+          <div class="var-name">soil_ph</div>
+
+          <span class="type-pill type-continua">Continua</span>
+
+        </div>
+
+        <div class="var-desc">Reacción química del suelo (acidez/alcalinidad). Indicador indirecto del tipo de vegetación y humedad.</div>
+
+        <div class="meta-row"><div class="meta-chip"><span class="label">Unidad</span><span class="value">pH (adimensional)</span></div><div class="meta-chip"><span class="label">Fuente</span><span class="value">SoilGrids</span></div><div class="meta-chip"><span class="label">Res.</span><span class="value">250 m</span></div></div>
+
+      </div>
+
+
+      <div class="var-card" data-tipo="continua" data-text="bulk_density densidad aparente suelo porosidad drenaje infiltración agua soilgrids">
+
+        <div class="card-top">
+
+          <div class="var-name">bulk_density</div>
+
+          <span class="type-pill type-continua">Continua</span>
+
+        </div>
+
+        <div class="var-desc">Densidad aparente del suelo. Afecta la porosidad, drenaje e infiltración del agua.</div>
+
+        <div class="meta-row"><div class="meta-chip"><span class="label">Unidad</span><span class="value">kg/dm³</span></div><div class="meta-chip"><span class="label">Fuente</span><span class="value">SoilGrids</span></div><div class="meta-chip"><span class="label">Res.</span><span class="value">250 m</span></div></div>
+
+      </div>
+
+    </div>
+
+
+    <div class="subsection-title">3.6 — Temporales</div>
+
+    <div class="cards-grid">
+
+
+
+      <div class="var-card" data-tipo="discreta" data-text="month mes año cíclico seno coseno temporada incendios estacional">
+
+        <div class="card-top">
+
+          <div class="var-name">month</div>
+
+          <span class="type-pill type-discreta">Discreta</span>
+
+        </div>
+
+        <div class="var-desc">Mes del año correspondiente al punto de muestra. Puede codificarse con transformación seno/coseno para capturar ciclicidad temporal.</div>
+
+        <div class="meta-row"><div class="meta-chip"><span class="label">Valores</span><span class="value">1 – 12</span></div></div>
+
+      </div>
+
+
+      <div class="var-card" data-tipo="binaria" data-text="fire_season_flag temporada incendios verano austral diciembre enero febrero marzo bandera">
+
+        <div class="card-top">
+
+          <div class="var-name">fire_season_flag</div>
+
+          <span class="type-pill type-binaria">Binaria</span>
+
+        </div>
+
+        <div class="var-desc">Indicador de si el punto corresponde a los meses de mayor actividad ígnea en Córdoba (típicamente verano austral: diciembre–marzo).</div>
+
+        <div class="meta-row"><div class="meta-chip"><span class="label">Valores</span><span class="value">1 = temporada · 0 = fuera</span></div></div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="section" data-section="04">
+
+    <div class="section-header">
+
+      <span class="section-number">04</span>
+
+      <span class="section-title">Salida del Modelo (Predicción)</span>
+
+      <span class="section-count">2 variables</span>
+
+    </div>
+
+    
+
+    
+
+    <div class="cards-grid">
+
+
+
+      <div class="var-card" data-tipo="continua" data-text="fire_probability probabilidad predicha incendio grilla 500m clasificador output">
+
+        <div class="card-top">
+
+          <div class="var-name">fire_probability</div>
+
+          <span class="type-pill type-continua">Continua</span>
+
+        </div>
+
+        <div class="var-desc">Probabilidad predicha por el modelo de que ocurra un incendio en una celda o punto dado. Salida principal del clasificador sobre la grilla de predicción (~500 m).</div>
+
+        <div class="meta-row"><div class="meta-chip"><span class="label">Rango</span><span class="value">[0, 1]</span></div></div>
+
+      </div>
+
+
+      <div class="var-card" data-tipo="categorica" data-text="risk_category riesgo bajo moderado alto muy alto natural breaks jenks clasificación mapa">
+
+        <div class="card-top">
+
+          <div class="var-name">risk_category</div>
+
+          <span class="type-pill type-categorica">Categórica</span>
+
+        </div>
+
+        <div class="var-desc">Categorización del riesgo obtenida por clasificación de <code style='font-family:monospace;font-size:11px;background:#1e1712;border:1px solid #3d2a1a;border-radius:2px;padding:1px 5px;color:#ff8c00'>fire_probability</code> mediante Natural Breaks (Jenks). Usada para la visualización en el dashboard.</div>
+
+        <div class="meta-row"><div class="meta-chip"><span class="label">Clases</span><span class="value">Bajo · Moderado · Alto · Muy Alto</span></div></div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="section" data-section="05">
+
+    <div class="section-header">
+
+      <span class="section-number">05</span>
+
+      <span class="section-title">Variables de Evaluación del Modelo</span>
+
+      <span class="section-count">7 variables</span>
+
+    </div>
+
+    
+
+    
+
+    <div class="cards-grid">
+
+
+
+      <div class="var-card" data-tipo="continua" data-text="auc_roc área curva roc métrica principal discriminación clasificación evaluación">
+
+        <div class="card-top">
+
+          <div class="var-name">auc_roc</div>
+
+          <span class="type-pill type-continua">Continua</span>
+
+        </div>
+
+        <div class="var-desc">Área bajo la curva ROC. Métrica principal de evaluación; mide la capacidad discriminativa del modelo entre clases fire/no-fire.</div>
+
+        <div class="meta-row"><div class="meta-chip"><span class="label">Rango</span><span class="value">[0, 1]</span></div></div>
+
+      </div>
+
+
+      <div class="var-card" data-tipo="continua" data-text="accuracy exactitud global modelo conjunto prueba test evaluación">
+
+        <div class="card-top">
+
+          <div class="var-name">accuracy</div>
+
+          <span class="type-pill type-continua">Continua</span>
+
+        </div>
+
+        <div class="var-desc">Exactitud global del modelo sobre el conjunto de prueba.</div>
+
+        <div class="meta-row"><div class="meta-chip"><span class="label">Rango</span><span class="value">[0, 1]</span></div></div>
+
+      </div>
+
+
+      <div class="var-card" data-tipo="continua" data-text="precision precisión predicciones positivas correctas evaluación clasificación">
+
+        <div class="card-top">
+
+          <div class="var-name">precision</div>
+
+          <span class="type-pill type-continua">Continua</span>
+
+        </div>
+
+        <div class="var-desc">Proporción de predicciones positivas que son correctas.</div>
+
+        <div class="meta-row"><div class="meta-chip"><span class="label">Rango</span><span class="value">[0, 1]</span></div></div>
+
+      </div>
+
+
+      <div class="var-card" data-tipo="continua" data-text="recall sensibilidad incendios reales detectados correctamente evaluación">
+
+        <div class="card-top">
+
+          <div class="var-name">recall</div>
+
+          <span class="type-pill type-continua">Continua</span>
+
+        </div>
+
+        <div class="var-desc">Proporción de incendios reales correctamente detectados por el modelo (sensibilidad).</div>
+
+        <div class="meta-row"><div class="meta-chip"><span class="label">Rango</span><span class="value">[0, 1]</span></div></div>
+
+      </div>
+
+
+      <div class="var-card" data-tipo="continua" data-text="f1_score media armónica precision recall evaluación clasificación">
+
+        <div class="card-top">
+
+          <div class="var-name">f1_score</div>
+
+          <span class="type-pill type-continua">Continua</span>
+
+        </div>
+
+        <div class="var-desc">Media armónica de precision y recall.</div>
+
+        <div class="meta-row"><div class="meta-chip"><span class="label">Rango</span><span class="value">[0, 1]</span></div></div>
+
+      </div>
+
+
+      <div class="var-card" data-tipo="continua" data-text="shap_value interpretabilidad contribución marginal feature predicción local global explicabilidad">
+
+        <div class="card-top">
+
+          <div class="var-name">shap_value</div>
+
+          <span class="type-pill type-continua">Continua</span>
+
+        </div>
+
+        <div class="var-desc">Valor SHAP por variable y por muestra. Cuantifica la contribución marginal de cada feature a la predicción individual del modelo. Permite interpretabilidad local y global.</div>
+
+        <div class="meta-row"><div class="meta-chip"><span class="label">Rango</span><span class="value">ℝ (puede ser negativo)</span></div></div>
+
+      </div>
+
+
+      <div class="var-card" data-tipo="continua" data-text="vif variance inflation factor multicolinealidad selección variables umbral 10">
+
+        <div class="card-top">
+
+          <div class="var-name">vif</div>
+
+          <span class="type-pill type-continua">Continua</span>
+
+        </div>
+
+        <div class="var-desc">Variance Inflation Factor. Se calcula para cada variable continua; valores &gt; 10 indican multicolinealidad problemática y la variable es descartada del modelo.</div>
+
+        <div class="meta-row"><div class="meta-chip"><span class="label">Rango</span><span class="value">≥ 1 · umbral: 10</span></div></div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="notes-box">
+
+    <div class="notes-title">⚙ Notas Metodológicas</div>
+
+    <ul class="notes-list">
+
+      <li><strong>Preprocesamiento:</strong> Variables continuas estandarizadas con <code>StandardScaler</code>. Variables categóricas (<code>land_cover</code>) codificadas con <code>one-hot encoding</code>.</li>
+      <li><strong>Selección de variables:</strong> Análisis VIF (umbral VIF &gt; 10) y matriz de correlación (umbral r &gt; 0.85) para eliminar variables redundantes antes del entrenamiento.</li>
+      <li><strong>Partición de datos:</strong> Split estratificado 70/30 para entrenamiento y prueba. Datos VIIRS 2023–2024 reservados como conjunto de validación temporal independiente.</li>
+      <li><strong>Grilla de predicción:</strong> ~500 m de resolución sobre toda la Provincia de Córdoba para la generación del mapa de susceptibilidad final.</li>
+
+    </ul>
+
+  </div>
+
+  <div class="no-results" id="noResults">No se encontraron variables que coincidan con la búsqueda.</div>
+
+</div>
+
+
+
+<script>
+
+
+
+  const searchInput = document.getElementById('searchInput');
+
+  const filterBtns  = document.querySelectorAll('.filter-btn');
+
+  const cards       = document.querySelectorAll('.var-card');
+
+  const visibleCount = document.getElementById('visibleCount');
+
+  const noResults   = document.getElementById('noResults');
+
+
+
+  let currentFilter = 'all';
+
+  let currentSearch = '';
+
+
+
+  function normalize(str) {
+
+    return str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+  }
+
+
+
+  function applyFilters() {
+
+    let visible = 0;
+
+    cards.forEach(card => {
+
+      const tipo       = card.dataset.tipo || '';
+
+      const searchText = normalize((card.dataset.text || '') + ' ' + (card.innerText || ''));
+
+      const searchOk   = !currentSearch || searchText.includes(normalize(currentSearch));
+
+      const filterOk   = currentFilter === 'all' || normalize(tipo).includes(normalize(currentFilter));
+
+      if (searchOk && filterOk) { card.classList.remove('hidden'); visible++; }
+
+      else                       { card.classList.add('hidden'); }
+
+    });
+
+    visibleCount.textContent = visible;
+
+    noResults.classList.toggle('visible', visible === 0);
+
+  }
+
+
+
+  searchInput.addEventListener('input', e => { currentSearch = e.target.value.trim(); applyFilters(); });
+
+  filterBtns.forEach(btn => {
+
+    btn.addEventListener('click', () => {
+
+      filterBtns.forEach(b => b.classList.remove('active'));
+
+      btn.classList.add('active');
+
+      currentFilter = btn.dataset.filter;
+
+      applyFilters();
+
+    });
+
+  });
+
+
+
+  visibleCount.textContent = document.querySelectorAll('.var-card').length;
+
+
+
+</script>
+
+
+
+</body>
+
+</html>
+

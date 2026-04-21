@@ -4,10 +4,6 @@ import { useEffect, useRef } from 'react';
 import { loadGrid, loadGridMeta, loadFires, loadFiresMeta } from '@/lib/loadBinary';
 import { useStore } from '@/store/useStore';
 
-/**
- * Loads all binary data on mount. Runs once.
- * Sets gridLoaded and firesLoaded in the Zustand store when done.
- */
 export function useDataLoader() {
   const loaded = useRef(false);
   const setGridData = useStore((s) => s.setGridData);
@@ -19,7 +15,6 @@ export function useDataLoader() {
     loaded.current = true;
 
     async function load() {
-      // Load grid and fires in parallel
       const [gridMeta, firesMeta] = await Promise.all([
         loadGridMeta(),
         loadFiresMeta(),

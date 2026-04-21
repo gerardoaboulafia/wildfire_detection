@@ -5,11 +5,10 @@ import MapContainer from '@/components/MapContainer';
 import LoadingOverlay from '@/components/ui/LoadingOverlay';
 import TimeSlider from '@/components/controls/TimeSlider';
 import LayerToggleControls from '@/components/controls/LayerToggles';
-import { useHeatmapLayer } from '@/components/layers/useHeatmapLayer';
+import { useProbabilityScatter } from '@/components/layers/useProbabilityScatter';
 import { useFirePointsLayer } from '@/components/layers/useFirePointsLayer';
 import { useStore } from '@/store/useStore';
 
-// Scripted flyover waypoints across Córdoba
 const WAYPOINTS = [
   { center: [-64.2, -30.0] as [number, number], zoom: 8.5, pitch: 62, bearing: 25, duration: 5000 },
   { center: [-64.8, -31.5] as [number, number], zoom: 9, pitch: 55, bearing: -10, duration: 5000 },
@@ -20,30 +19,22 @@ const WAYPOINTS = [
 
 export default function FlyoverView() {
   const layers_store = useStore((s) => s.layers);
-  const heatmapLayer = useHeatmapLayer(layers_store.showHeatmap);
+  const probLayer = useProbabilityScatter(true, 200);
   const fireLayer = useFirePointsLayer(layers_store.showFires);
   const flyoverStarted = useRef(false);
 
-  // Trigger the flyover animation once the map is ready
   useEffect(() => {
     if (flyoverStarted.current) return;
-
     let cancelled = false;
 
     async function startFlyover() {
-      // Wait for Mapbox to be loaded
       const mapboxgl = (await import('mapbox-gl')).default;
       void mapboxgl;
-
-      // Poll until the map container has a Mapbox map attached
-      // We access the global map instance via a custom event
       let attempts = 0;
       while (attempts < 30) {
         if (cancelled) return;
         await new Promise((r) => setTimeout(r, 500));
         attempts++;
-
-        // Dispatch a custom event to trigger flyover from MapContainer
         window.dispatchEvent(new CustomEvent('wf:startFlyover', { detail: WAYPOINTS }));
         break;
       }
@@ -66,9 +57,8 @@ export default function FlyoverView() {
     <div className="relative flex h-full w-full">
       <div className="relative flex-1">
         <LoadingOverlay />
-        <MapContainer layers={[heatmapLayer, fireLayer]} />
+        <MapContainer layers={[probLayer, fireLayer]} enableTerrain={true} />
 
-        {/* Flyover label */}
         <div className="pointer-events-none absolute bottom-8 left-1/2 -translate-x-1/2 rounded-full bg-black/60 px-4 py-1.5 text-xs font-medium text-white backdrop-blur-sm">
           Terrain flyover — Córdoba Province fire risk
         </div>
@@ -78,7 +68,7 @@ export default function FlyoverView() {
         <div>
           <h2 className="mb-1 text-sm font-bold text-white">Terrain Flyover</h2>
           <p className="text-xs text-gray-400">
-            Animated tour with heatmap showing susceptibility probability.
+            Animated tour with susceptibility surface draped over 3D terrain.
           </p>
         </div>
         <LayerToggleControls />

@@ -9,9 +9,9 @@ export const CORDOBA_BBOX = {
 export const INITIAL_VIEW_STATE = {
   longitude: -63.78,
   latitude: -32.25,
-  zoom: 7,
-  pitch: 45,
-  bearing: -10,
+  zoom: 6.5,
+  pitch: 0,
+  bearing: 0,
 };
 
 export const MAPBOX_STYLES = {
