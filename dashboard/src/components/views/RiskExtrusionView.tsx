@@ -4,6 +4,7 @@ import MapContainer from '@/components/MapContainer';
 import LoadingOverlay from '@/components/ui/LoadingOverlay';
 import BasemapToggle from '@/components/controls/BasemapToggle';
 import LayerToggleControls from '@/components/controls/LayerToggles';
+import RiskOpacitySlider from '@/components/controls/RiskOpacitySlider';
 import { useProbabilityScatter } from '@/components/layers/useProbabilityScatter';
 import { useFirePointsLayer } from '@/components/layers/useFirePointsLayer';
 import { useZonesLayer } from '@/components/layers/useZonesLayer';
@@ -53,6 +54,7 @@ export default function RiskExtrusionView() {
         </div>
         <BasemapToggle />
         <LayerToggleControls />
+        <RiskOpacitySlider />
         <div className="mt-auto rounded-lg bg-gray-800 p-3">
           <p className="text-xs text-gray-400">
             <span className="font-mono font-bold text-white">629,777</span> grid cells at 500 m ·

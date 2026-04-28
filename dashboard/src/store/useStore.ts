@@ -32,6 +32,9 @@ interface AppState {
   hexRadius: number;
   setHexRadius: (r: number) => void;
 
+  riskOpacity: number;
+  setRiskOpacity: (o: number) => void;
+
   yearRange: [number, number];
   setYearRange: (r: [number, number]) => void;
 
@@ -88,6 +91,9 @@ export const useStore = create<AppState>((set) => ({
 
   hexRadius: 8000,
   setHexRadius: (hexRadius) => set({ hexRadius }),
+
+  riskOpacity: 1.0,
+  setRiskOpacity: (riskOpacity) => set({ riskOpacity }),
 
   yearRange: [2001, 2024],
   setYearRange: (yearRange) => set({ yearRange }),

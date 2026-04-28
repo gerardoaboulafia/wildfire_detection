@@ -43,6 +43,7 @@ export function useProbabilityScatter(enabled: boolean, alpha = 180) {
   const gridLons = useStore((s) => s.gridLons);
   const gridLats = useStore((s) => s.gridLats);
   const gridProbs = useStore((s) => s.gridProbs);
+  const riskOpacity = useStore((s) => s.riskOpacity);
 
   // Pack into typed-array attribute buffers so deck.gl uploads directly to GPU.
   const attrs = useMemo(() => {
@@ -73,6 +74,8 @@ export function useProbabilityScatter(enabled: boolean, alpha = 180) {
         getFillColor: { value: attrs.colors, size: 4 },
       },
     },
+    opacity: riskOpacity,
+    updateTriggers: { opacity: riskOpacity },
     getRadius: 350,
     radiusUnits: 'meters',
     radiusMinPixels: 1.2,
