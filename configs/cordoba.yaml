@@ -56,6 +56,14 @@ gee:
   lst_band: "LST_Day_1km"
   lst_scale_factor: 0.02
   lst_offset_k: 0.0  # Already in Kelvin; subtract 273.15 for Celsius
+  # MODIS Evapotranspiration (MOD16A2GF V6.1 gap-filled, 8-day, 500m;
+  # standard MOD16A2 V061 only starts 2021, so use the gap-filled
+  # collection for full 2001-2022 coverage)
+  et_dataset: "MODIS/061/MOD16A2GF"
+  et_scale_m: 500
+  et_band: "ET"
+  et_scale_factor: 0.1   # raw units kg/m^2/8day x 0.1 -> mm/8day
+  et_qc_band: "ET_QC"
   export_folder: "wildfires_cordoba_gee"
 
 era5:

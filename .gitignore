@@ -13,8 +13,18 @@ build/
 venv/
 env/
 
-# Data (large, gitignored)
-data/
+# Data (large, gitignored) — processed splits committed for reproducibility
+data/raw/
+data/ingestion/
+data/processing/
+# Ignore contents of processed/* but allow key notebook inputs
+data/processed/*
+!data/processed/dataset_v2.csv
+!data/processed/train_v2.csv
+!data/processed/test_v2.csv
+!data/processed/selected_features_v2.json
+!data/processed/scaler_v2.pkl
+!data/processed/encoder_v2.pkl
 
 # Model artifacts
 models/
