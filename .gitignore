@@ -64,3 +64,8 @@ dashboard/.env*.local
 
 # CDS API key
 .cdsapirc
+
+# AI assistant files (internal use only)
+CLAUDE.md
+tasks/
+memory/

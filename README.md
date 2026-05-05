@@ -13,8 +13,8 @@ scripts/            # Utility scripts
 reusable_code/      # Adapted pipelines (GEE, SoilGrids, OSM)
 configs/            # Project configuration (cordoba.yaml)
 dashboard/          # Next.js 3D visualization app
-tasks/              # Task tracking and lessons learned
-data/               # Raw & processed data (gitignored)
+data/processed/     # Train/test CSVs and preprocessor artifacts (committed)
+data/raw/           # Raw satellite and vector data (gitignored, ~2.5 GB)
 models/             # Trained model artifacts (gitignored)
 mlruns/             # MLflow experiment tracking (gitignored)
 outputs/            # Generated maps and figures (gitignored)
@@ -59,7 +59,13 @@ conda activate py311_ds
 pip install -r requirements.txt
 ```
 
-Data files are not included in the repo due to size (~2.5 GB). Each notebook documents how to fetch its data from the original sources (NASA FIRMS, Google Earth Engine, CDS API, SoilGrids, OSM).
+The processed training data (`data/processed/`) is included in the repo so notebooks 03b onward can be run directly:
+
+- `dataset_v2.csv` — full labeled dataset
+- `train_v2.csv` / `test_v2.csv` — stratified 70/30 split
+- `scaler_v2.pkl`, `encoder_v2.pkl`, `selected_features_v2.json` — fitted preprocessors
+
+Raw data (~2.5 GB) is not included. Each ingestion notebook documents how to fetch from the original sources (NASA FIRMS, Google Earth Engine, CDS API, SoilGrids, OSM).
 
 ### Dashboard (Next.js)
 
